@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tns="http://HastingsDirect.com/qcore/CVQuoteEngineAPI" xmlns:gwwsdl="http://guidewire.com/pl/wsdl" xmlns:gwsoap="http://guidewire.com/ws/soapheaders" xmlns:soap11="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" name="CVQuoteEngineAPI" targetNamespace="http://HastingsDirect.com/qcore/CVQuoteEngineAPI" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://HastingsDirect.com/qcore/CVQuoteEngineAPI" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import schemaLocation="../../../../../../gw/xsd/guidewire/soapheaders.xsd" namespace="http://guidewire.com/ws/soapheaders" />
+      <xs:import schemaLocation="../../../../../../com/hastings/integration/aggs/commercialvan/xsd/van-quote.xsd" />
+      <xs:element name="getAggregatorVanQuote">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="req">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="VanQuoteRequest" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getAggregatorVanQuoteResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="return">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="BrokerResponse" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="WsiAuthenticationException">
+        <xs:complexType />
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getAggregatorVanQuote">
+    <wsdl:part name="parameters" element="tns:getAggregatorVanQuote" />
+  </wsdl:message>
+  <wsdl:message name="getAggregatorVanQuoteResponse">
+    <wsdl:part name="parameters" element="tns:getAggregatorVanQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="WsiAuthenticationException">
+    <wsdl:part name="WsiAuthenticationException" element="tns:WsiAuthenticationException" />
+  </wsdl:message>
+  <wsdl:message name="gw-authentication">
+    <wsdl:part name="gw-authentication" element="gwsoap:authentication" />
+  </wsdl:message>
+  <wsdl:message name="gw-locale">
+    <wsdl:part name="gw-locale" element="gwsoap:locale" />
+  </wsdl:message>
+  <wsdl:portType name="CVQuoteEngineAPIPortType">
+    <wsdl:operation name="getAggregatorVanQuote">
+      <wsdl:input name="getAggregatorVanQuote" message="tns:getAggregatorVanQuote" />
+      <wsdl:output name="getAggregatorVanQuoteResponse" message="tns:getAggregatorVanQuoteResponse" />
+      <wsdl:fault name="WsiAuthenticationException" message="tns:WsiAuthenticationException" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CVQuoteEngineAPISoap12Binding" type="tns:CVQuoteEngineAPIPortType">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getAggregatorVanQuote">
+      <soap12:operation soapAction="" style="document" />
+      <wsdl:input name="getAggregatorVanQuote">
+        <soap12:body use="literal" />
+        <soap12:header message="tns:gw-authentication" part="gw-authentication" use="literal" />
+        <soap12:header message="tns:gw-locale" part="gw-locale" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAggregatorVanQuoteResponse">
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="WsiAuthenticationException">
+        <soap12:fault use="literal" name="WsiAuthenticationException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="CVQuoteEngineAPISoap11Binding" type="tns:CVQuoteEngineAPIPortType">
+    <soap11:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getAggregatorVanQuote">
+      <soap11:operation soapAction="" style="document" />
+      <wsdl:input name="getAggregatorVanQuote">
+        <soap11:body use="literal" />
+        <soap11:header message="tns:gw-authentication" part="gw-authentication" use="literal" />
+        <soap11:header message="tns:gw-locale" part="gw-locale" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAggregatorVanQuoteResponse">
+        <soap11:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="WsiAuthenticationException">
+        <soap11:fault use="literal" name="WsiAuthenticationException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CVQuoteEngineAPI">
+    <wsdl:port name="CVQuoteEngineAPISoap12Port" binding="tns:CVQuoteEngineAPISoap12Binding">
+      <soap12:address location="http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/commercialvan/qcore/CVQuoteEngineAPI" />
+      <gwwsdl:address location="${pc}/ws/com/hastings/integration/aggs/commercialvan/qcore/CVQuoteEngineAPI" />
+    </wsdl:port>
+    <wsdl:port name="CVQuoteEngineAPISoap11Port" binding="tns:CVQuoteEngineAPISoap11Binding">
+      <soap11:address location="http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/commercialvan/qcore/CVQuoteEngineAPI/soap11" />
+      <gwwsdl:address location="${pc}/ws/com/hastings/integration/aggs/commercialvan/qcore/CVQuoteEngineAPI/soap11" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

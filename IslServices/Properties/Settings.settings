@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IslServices.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IslServices_WsQhDevWarr_PCQuoteEngineAPI" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/privatecar/qcore/PCQuoteEngineAPI</Value>
+    </Setting>
+    <Setting Name="IslServices_WsIslPrd_Isl" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://ad1-prd-islclus.network.uk.ad:8080/Isl.svc</Value>
+    </Setting>
+    <Setting Name="IslServices_WsIslDevWarr_Isl" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://bx2-dev-is01.test.hastings.local:8080/Isl.svc</Value>
+    </Setting>
+    <Setting Name="IslServices_VanQuoteServiceDevWarr_CVQuoteEngineAPI" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/commercialvan/qcore/CVQuoteEngineAPI</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

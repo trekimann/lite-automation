@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/gw/xsd/guidewire/soapheaders.xsd" filename="soapheaders.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/privatecar/xsd/car-quote.xsd" filename="car-quote.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://tst-gw-devwar04.test.hastings.local:9080/pc/ws/com/hastings/integration/aggs/privatecar/qcore/PCQuoteEngineAPI?WSDL" filename="PCQuoteEngineAPI.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>

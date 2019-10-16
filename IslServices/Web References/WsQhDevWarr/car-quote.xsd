@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="phoneNum">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="year">
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+  <xs:simpleType name="name">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="30" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="email">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="60" />
+      <xs:pattern value=".*@(.*\.)+.*" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="levelOfNcd">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="registration">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0" />
+      <xs:maxLength value="10" />
+      <xs:pattern value="[a-zA-Z\s0-9]{0,10}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Cost">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="addressType">
+    <xs:sequence>
+      <xs:element name="addressLine1" type="xs:string" />
+      <xs:element name="addressLine2" type="xs:string" />
+      <xs:element name="addressLine3" type="xs:string" />
+      <xs:element name="town" type="xs:string" />
+      <xs:element name="county" type="xs:string" />
+      <xs:element name="postCode" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="primaryPhone">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="home" />
+      <xs:enumeration value="work" />
+      <xs:enumeration value="mobile" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="driverMessageList">
+    <xs:list itemType="xs:string" />
+  </xs:simpleType>
+  <xs:complexType name="myLicenceType">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="dvlaServiceVersion" type="xs:string" />
+      <xs:element minOccurs="1" name="hubServiceVersion" type="xs:string" />
+      <xs:element minOccurs="0" name="dvlaProcessingDate" type="xs:date" />
+      <xs:element minOccurs="0" name="hubProcessingDate" type="xs:date" />
+      <xs:element minOccurs="1" name="licenceStatus" type="xs:string" />
+      <xs:element minOccurs="0" name="licenceValidFrom" type="xs:date" />
+      <xs:element minOccurs="1" name="licenceValidTo" type="xs:date" />
+      <xs:element minOccurs="0" name="licenceDirectiveIndicator" type="xs:nonNegativeInteger" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="entitlements">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="entitlement">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="entitlementCode" type="xs:string" />
+                  <xs:element minOccurs="0" name="entitlementValidFrom" type="xs:date" />
+                  <xs:element minOccurs="0" name="entitlementValidTo" type="xs:date" />
+                  <xs:element minOccurs="1" name="entitlementPriorTo" type="xs:boolean" />
+                  <xs:element minOccurs="1" name="entitlementType" type="xs:string" />
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="restrictions">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="restriction">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element minOccurs="0" name="restrictionsType" type="xs:string" />
+                              <xs:element minOccurs="0" name="restrictionsInfo" type="xs:string" />
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="endorsements">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="endorsementsCode" type="xs:string" />
+            <xs:element minOccurs="0" name="endorsementsOffenceDate" type="xs:date" />
+            <xs:element minOccurs="0" name="endorsementsConvictionDate" type="xs:date" />
+            <xs:element minOccurs="0" name="endorsementsFine" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="0" name="endorsementsNoOfPoints" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="1" name="endorsementsIsDisqual" type="xs:boolean" />
+            <xs:element minOccurs="1" name="endorsementsDisqualPeriod" type="xs:string" />
+            <xs:element minOccurs="0" name="endorsementsDisqualStartDate" type="xs:date" />
+            <xs:element minOccurs="0" name="endorsementsDisqualEndDate" type="xs:date" />
+            <xs:element minOccurs="0" name="endorsementsCustodialPeriod" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="0" name="endorsementsRehabSpentDate" type="xs:date" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" name="driverMessage" type="driverMessageList" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="nameType">
+    <xs:sequence>
+      <xs:element name="fullName">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="title">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="title" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute fixed="NamePrefix" name="typeListName" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="1" name="titleDesc" type="xs:string" />
+            <xs:element minOccurs="1" name="firstName" type="name" />
+            <xs:element minOccurs="1" name="lastName" type="name" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="employmentType">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="isPrimary" type="xs:boolean" />
+      <xs:element name="employmentStatusCode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="employmentStatusCode" type="xs:string" />
+          </xs:sequence>
+          <xs:attribute fixed="FullTimeEmpStatus_Ext" name="typeListName" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" name="employmentStatusDesc" type="xs:string" />
+      <xs:element name="employmentOccupationCode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="employmentOccupationCode" type="xs:string" />
+          </xs:sequence>
+          <xs:attribute fixed="OccupationType_Ext" name="typeListName" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" name="employmentOccupationDesc" type="xs:string" />
+      <xs:element minOccurs="0" name="whatWereYouStudying" type="xs:string" />
+      <xs:element name="employmentBusinessCode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="employmentBusinessCode" type="xs:string" />
+          </xs:sequence>
+          <xs:attribute fixed="BusinessType_Ext" name="typeListName" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" name="employmentBusinessDesc" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="licenceType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="number" type="xs:string" />
+      <xs:element name="type">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="type" type="xs:string" />
+          </xs:sequence>
+          <xs:attribute fixed="LicenceType_Ext" name="typeListName" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" name="typeDesc" type="xs:string" />
+      <xs:element minOccurs="1" name="lengthHeld" type="xs:date" />
+      <xs:element minOccurs="0" name="fullUkLicenceIamCert" type="xs:boolean" />
+      <xs:element minOccurs="0" name="yearPassPlusCert" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="claimsType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="claim">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="date" type="xs:date" />
+            <xs:element name="type">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="type" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute fixed="DriverClaimType_Ext" name="typeListName" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="source">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="source" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute fixed="DriverClaimSource_Ext" name="typeListName" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="1" name="typeDesc" type="xs:string" />
+            <xs:element minOccurs="0" name="claimOnRecentPolicy" type="xs:boolean" />
+            <xs:element minOccurs="1" name="ncdAffected" type="xs:boolean" />
+            <xs:element minOccurs="1" name="fault" type="xs:boolean" />
+            <xs:element minOccurs="0" name="cost" type="xs:integer" />
+            <xs:element minOccurs="0" name="costOfTParty" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="0" name="anyInjuries" type="xs:boolean" />
+            <xs:element minOccurs="0" name="whoWasDriving" type="xs:string" />
+            <xs:element minOccurs="0" name="whoWasOnFault" type="xs:string" />
+            <xs:element minOccurs="0" name="claimSettled" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="convictionsType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="conviction">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" name="date" type="xs:date" />
+            <xs:element name="convictionCode">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="convictionCode" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute fixed="ConvictionCodes_Ext" name="typeListName" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="1" name="convictionCodeDesc" type="xs:string" />
+            <xs:element name="licencePoints">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" name="licencePoints" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute fixed="ConvictionPoints_Ext" name="typeListName" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="fine" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="1" name="banLength" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="0" name="breathalyserReading" type="xs:nonNegativeInteger" />
+            <xs:element minOccurs="0" name="convictionAccident" type="xs:boolean" />
+            <xs:element minOccurs="0" name="isBreathalysed" type="xs:boolean" />
+            <xs:element minOccurs="0" name="typeAlcoholReading" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CarQuoteRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quoteHeader">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" name="aggsSource" type="xs:string" />
+              <xs:element minOccurs="1" name="aggsId" type="xs:string" />
+              <xs:element minOccurs="1" name="timestamp" type="xs:dateTime" />
+              <xs:element minOccurs="1" name="originOfBusiness" type="xs:string" />
+              <xs:element minOccurs="0" name="headerAdditionalData">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="data">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="name" type="xs:string" />
+                          <xs:element minOccurs="0" name="value" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="systemDetails">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="operatingSystem" type="xs:string" />
+                    <xs:element minOccurs="0" name="browser" type="xs:string" />
+                    <xs:element minOccurs="0" name="ipAddress" type="xs:string" />
+                    <xs:element minOccurs="0" name="browserVersion" type="xs:string" />
+                    <xs:element minOccurs="0" name="browserLanguage" type="xs:string" />
+                    <xs:element minOccurs="0" name="ispCustomer" type="xs:string" />
+                    <xs:element minOccurs="0" name="deviceType" type="xs:string" />
+                    <xs:element minOccurs="0" name="deviceManufacture" type="xs:string" />
+                    <xs:element minOccurs="0" name="screenResolution" type="xs:string" />
+                    <xs:element minOccurs="0" name="geographicalLocation" type="xs:string" />
+                    <xs:element minOccurs="0" name="googleAnalyticsUserAge" type="xs:string" />
+                    <xs:element minOccurs="0" name="googleAnalyticsGooglePersona" type="xs:string" />
+                    <xs:element minOccurs="0" name="googleAnalyticsOriginalChannel" type="xs:string" />
+                    <xs:element minOccurs="0" name="googleAnalyticsNumOfDiffDevices" type="xs:string" />
+                    <xs:element minOccurs="0" name="googleAnalyticsFrequencyOfVisits" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="carQuote">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" name="autoRenewal" type="xs:boolean" />
+              <xs:element minOccurs="1" name="marketingPermissions" type="xs:boolean" />
+              <xs:element minOccurs="1" name="noOfCarsHousehold" type="xs:nonNegativeInteger" />
+              <xs:element minOccurs="0" name="noOfDriversinHouse">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="noOfDriversinHouse" type="xs:string" />
+                  </xs:sequence>
+                  <xs:attribute fixed="NoOfDrivers_Ext" name="typeListName" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="1" name="inceptionDate" type="xs:date" />
+              <xs:element name="car">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" name="abiCode" type="xs:string" />
+                    <xs:element minOccurs="0" name="registration" type="registration" />
+                    <xs:element minOccurs="1" name="make" type="xs:string" />
+                    <xs:element minOccurs="0" name="IsCarFitWithAEB" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="motDue">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="motDue" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="Months" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="bodyType" type="xs:string" />
+                    <xs:element minOccurs="1" name="yearOfRegistration" type="year" />
+                    <xs:element minOccurs="1" name="transmission">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="transmission" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="Transmission_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="engineSize" type="xs:string" />
+                    <xs:element minOccurs="1" name="model" type="xs:string" />
+                    <xs:element minOccurs="0" name="noOfDoors" type="xs:string" />
+                    <xs:element minOccurs="1" name="noOfSeats" type="xs:nonNegativeInteger" />
+                    <xs:element minOccurs="0" name="fuelType" type="xs:string" />
+                    <xs:element minOccurs="1" name="carValue" type="Cost" />
+                    <xs:element minOccurs="1" name="purchaseDate" type="xs:date" />
+                    <xs:element minOccurs="1" name="importType">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="importType" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="ImportType_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="importTypeDesc" type="xs:string" />
+                    <xs:element minOccurs="1" name="rightHandDrive" type="xs:boolean" />
+                    <xs:element minOccurs="1" name="immobiliser">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="immobiliser" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="AlarmImmobiliser_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="immobiliserDesc" type="xs:string" />
+                    <xs:element minOccurs="0" name="alarmDesc" type="xs:string" />
+                    <xs:element minOccurs="1" name="tracker" type="xs:boolean" />
+                    <xs:element minOccurs="1" name="trackerDesc" type="xs:string" />
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="modifications">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="modificationAbiCode">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="modificationAbiCode" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="VehicleModifications_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="modificationAbiDesc" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="overnightPostCode" type="xs:string" />
+                    <xs:element name="parkedDaytimeData">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:sequence>
+                            <xs:element minOccurs="0" name="code" type="xs:string" />
+                            <xs:element minOccurs="0" name="description" type="xs:string" />
+                          </xs:sequence>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="parkedOvernight">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="parkedOvernight" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="KeptOvernight_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="parkedOvernightDesc" type="xs:string" />
+                    <xs:element minOccurs="1" name="owner">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="owner" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="OwnerKeeper_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="ownerDesc" type="xs:string" />
+                    <xs:element minOccurs="1" name="registeredKeeper">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="registeredKeeper" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute fixed="OwnerKeeper_Ext" name="typeListName" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" name="registeredKeeperDesc" type="xs:string" />
+                    <xs:element name="cover">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="coverType">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="coverType" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="CoverageCategory_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="coverLevelDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="classOfUse">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="classOfUse" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="ClassOfUse_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="classOfUseDesc" type="xs:string" />
+                          <xs:element minOccurs="0" name="voluntaryExcess">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="voluntaryExcess" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="VolExcess_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="voluntaryExcessDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="mainUser" type="xs:integer" />
+                          <xs:element minOccurs="0" name="businessMileage" type="xs:string" />
+                          <xs:element minOccurs="0" name="personalMileage" type="xs:string" />
+                          <xs:element minOccurs="1" name="totalMileage" type="xs:string" />
+                          <xs:element minOccurs="1" name="ncdGrantedYears">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="ncdGrantedYears" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="NCDGrantedYears_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="ncdGreaterZero">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="ncdProtect" type="xs:boolean" />
+                                <xs:element minOccurs="0" name="ncdCurrentlyProtected" type="xs:boolean" />
+                                <xs:element minOccurs="1" name="howNcdEarn">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="1" name="howNcdEarn" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="NCDEarnedFrom_Ext" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" name="howNcdEarnDesc" type="xs:string" />
+                                <xs:element minOccurs="1" name="ncdEarnedUk" type="xs:boolean" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="ncdZero">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="nameDriverExpFlag" type="xs:boolean" />
+                                <xs:element minOccurs="1" name="nameDriverExp">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="1" name="nameDriverExp" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="DrivingExperience_Ext" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="1" name="yearsNamedDriverExp">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="1" name="yearsNamedDriverExp" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="NCD_Ext" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" name="nameDriverExpDesc" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="insurancePaymentType">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="insurancePaymentType" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="InsurancePaymentType_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="previousPolicyExpire" type="xs:date" />
+                          <xs:element minOccurs="0" name="previousInsuranceProvider">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" name="previousInsuranceProvider" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="Insurers_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="drivers">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="policyholder">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name" type="nameType" />
+                          <xs:element name="driverId" type="xs:integer" />
+                          <xs:element minOccurs="1" name="dateOfBirth" type="xs:date" />
+                          <xs:element minOccurs="1" name="maritalStatus">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="maritalStatus" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="MaritalStatus" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="maritalStatusDesc" type="xs:string" />
+                          <xs:element name="address" type="addressType" />
+                          <xs:element minOccurs="1" name="ukResident" type="xs:date" />
+                          <xs:element name="marketingPreference">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="homeOwner" type="xs:boolean" />
+                                <xs:element minOccurs="0" name="homeInsuranceRenewal">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" name="homeInsuranceRenewal" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="InsuranceRenewalMonth_Ext" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" name="timeAtCurrentAddress">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" name="timeAtCurrentAddress" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="NCDGrantedYears_Ext" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" name="anyChildrenUnder16" type="xs:boolean" />
+                                <xs:element minOccurs="0" name="tescoClubCardDetails" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="unbounded" name="fieldsData">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" name="code" type="xs:string" />
+                                      <xs:element minOccurs="0" name="value" type="xs:string" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" maxOccurs="2" name="employment" type="employmentType" />
+                          <xs:element name="licence" type="licenceType" />
+                          <xs:element minOccurs="1" name="myLicenceIndicator" type="xs:boolean" />
+                          <xs:element minOccurs="0" name="myLicence" type="myLicenceType" />
+                          <xs:element minOccurs="1" name="useOtherVehicle">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="useOtherVehicle" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="AccessOtherVeh_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="useOtherVehicleDesc" type="xs:string" />
+                          <xs:element minOccurs="0" name="primaryEmail" type="email" />
+                          <xs:element minOccurs="0" name="secondaryEmail" type="email" />
+                          <xs:element minOccurs="0" name="homePhoneNumber" type="phoneNum" />
+                          <xs:element minOccurs="0" name="workPhoneNumber" type="phoneNum" />
+                          <xs:element minOccurs="0" name="mobilePhoneNumber" type="phoneNum" />
+                          <xs:element minOccurs="0" name="faxPhoneNumber" type="phoneNum" />
+                          <xs:element minOccurs="0" name="primaryPhone" type="primaryPhone" />
+                          <xs:element minOccurs="1" name="medicalConditions">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="medicalConditions" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="DVLAMedicalCondition_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="medicalConditionsDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="nonMotoringConvictions" type="xs:boolean" />
+                          <xs:element minOccurs="0" name="claims" type="claimsType" />
+                          <xs:element minOccurs="0" name="convictions" type="convictionsType" />
+                          <xs:element minOccurs="1" name="isPolicyDeclinedForDrivers" type="xs:boolean" />
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="specialTermsImposed">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" name="specialTermsImposed" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="SpecialTerms_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="specialTermsImposedDesc" type="xs:string" />
+                          <xs:element minOccurs="0" name="regularlyDriveAtPeakTimes" type="xs:boolean" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="additionalDriver">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="title">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="1" name="title" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute fixed="NamePrefix" name="typeListName" type="xs:string" />
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="1" name="titleDesc" type="xs:string" />
+                                <xs:element minOccurs="1" name="firstName" type="name" />
+                                <xs:element minOccurs="1" name="lastName" type="name" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="driverId" type="xs:integer" />
+                          <xs:element minOccurs="1" name="dateOfBirth" type="xs:date" />
+                          <xs:element minOccurs="1" name="maritalStatus">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="maritalStatus" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="MaritalStatus" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="maritalStatusDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="relationship">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="relationship" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="RelationToProposer_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="relationshipDesc" type="xs:string" />
+                          <xs:element name="ukResident" type="xs:date" />
+                          <xs:element minOccurs="1" maxOccurs="2" name="employment" type="employmentType" />
+                          <xs:element name="licence" type="licenceType" />
+                          <xs:element minOccurs="1" name="myLicenceIndicator" type="xs:boolean" />
+                          <xs:element minOccurs="0" name="myLicence" type="myLicenceType" />
+                          <xs:element minOccurs="0" name="useOtherVehicle">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" name="useOtherVehicle" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="AccessOtherVeh_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="useOtherVehicleDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="medicalConditions">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" name="medicalConditions" type="xs:string" />
+                              </xs:sequence>
+                              <xs:attribute fixed="DVLAMedicalCondition_Ext" name="typeListName" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" name="medicalConditionsDesc" type="xs:string" />
+                          <xs:element minOccurs="1" name="nonMotoringConvictions" type="xs:boolean" />
+                          <xs:element minOccurs="0" name="claims" type="claimsType" />
+                          <xs:element minOccurs="0" name="convictions" type="convictionsType" />
+                          <xs:element minOccurs="0" name="regularlyDriveAtPeakTimes" type="xs:boolean" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="extraQuestions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="1" name="vanInsured" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="renewalVanDue" type="xs:date" />
+                    <xs:element minOccurs="1" name="bikeInsured" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="renewalBikeDue" type="xs:date" />
+                    <xs:element minOccurs="0" name="homeInsured" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="renewalPrice" type="xs:integer" />
+                    <xs:element minOccurs="0" name="bestPrice" type="xs:integer" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="additionalVariablesString">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="question">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="id" type="xs:string" />
+                          <xs:element minOccurs="0" name="value" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="additionalVariablesDate">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="question">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="id" type="xs:string" />
+                          <xs:element minOccurs="0" name="value" type="xs:date" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="additionalVariablesInteger">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="question">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="id" type="xs:string" />
+                          <xs:element minOccurs="0" name="value" type="xs:integer" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="additionalVariablesBoolean">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="question">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="id" type="xs:string" />
+                          <xs:element minOccurs="0" name="value" type="xs:boolean" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="ancillaries">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:sequence>
+                      <xs:element minOccurs="0" name="ancillary" type="xs:boolean" />
+                      <xs:element minOccurs="0" name="ancillaryCode" type="xs:string" />
+                    </xs:sequence>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BrokerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" name="aggsId" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="quote">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" name="brandID" type="xs:string" />
+              <xs:element minOccurs="1" name="brandDescription" type="xs:string" />
+              <xs:element minOccurs="1" name="quoteReference" type="xs:string" />
+              <xs:element minOccurs="0" name="totalPremiumPNCD" type="xs:float" />
+              <xs:element minOccurs="0" name="annualPremium" type="xs:float" />
+              <xs:element minOccurs="0" name="pncdIndicator" type="xs:boolean" />
+              <xs:element minOccurs="0" name="pncdAverageAmount" type="xs:float" />
+              <xs:element minOccurs="0" name="insurerName" type="xs:string" />
+              <xs:element minOccurs="0" name="productType" type="xs:string" />
+              <xs:element minOccurs="0" name="isDeclined" type="xs:boolean" />
+              <xs:element minOccurs="0" name="coverType" type="xs:string" />
+              <xs:element minOccurs="0" name="drivers">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="driver">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" name="firstName" type="name" />
+                          <xs:element minOccurs="1" name="lastName" type="name" />
+                          <xs:element minOccurs="1" name="hasDrivingOtherCar" type="xs:boolean" />
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="excess">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" name="name" type="xs:string" />
+                                <xs:element minOccurs="0" name="amount" type="xs:float" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="vehicle">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="excess">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="name" type="xs:string" />
+                          <xs:element minOccurs="0" name="amount" type="xs:float" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="totals">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="totalVoluntary" type="xs:float" />
+                    <xs:element minOccurs="0" name="totalCompulsory" type="xs:float" />
+                    <xs:element minOccurs="0" name="totalExcess" type="xs:float" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="endorsements">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="code" type="xs:string" />
+                    <xs:element minOccurs="0" name="desc" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="exclusions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="code" type="xs:string" />
+                    <xs:element minOccurs="0" name="desc" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="benefits">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="title" type="xs:string" />
+                    <xs:element minOccurs="0" name="extensionText" type="xs:string" />
+                    <xs:element minOccurs="0" name="type" type="xs:string" />
+                    <xs:element minOccurs="0" name="included" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="limit" type="xs:string" />
+                    <xs:element minOccurs="0" name="exclusions" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="instalments">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:sequence>
+                      <xs:element minOccurs="1" name="instalmentScheme" type="xs:string" />
+                      <xs:element minOccurs="1" name="instalmentType" type="xs:string" />
+                      <xs:element minOccurs="1" name="downPayment" type="xs:float" />
+                      <xs:element minOccurs="1" name="downPaymentPercentage" type="xs:float" />
+                      <xs:element minOccurs="1" name="totalInstalmentPremium" type="xs:float" />
+                      <xs:element minOccurs="1" name="noOfPayments" type="xs:integer" />
+                      <xs:element minOccurs="1" name="paymentAmount" type="xs:float" />
+                      <xs:element minOccurs="1" name="interestAmount" type="xs:float" />
+                      <xs:element minOccurs="0" name="apr" type="xs:float" />
+                    </xs:sequence>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="secondLineText" type="xs:string" />
+              <xs:element minOccurs="0" name="multipleProductDiscount" type="xs:boolean" />
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="discount">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:sequence>
+                      <xs:element minOccurs="1" name="discountAmount" type="xs:string" />
+                      <xs:element minOccurs="1" name="desc" type="xs:string" />
+                    </xs:sequence>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="specialOffers" type="xs:string" />
+              <xs:element minOccurs="0" name="deepLinkUrl" type="xs:anyURI" />
+              <xs:element minOccurs="0" name="ancillaries">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ancillary">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="title" type="xs:string" />
+                          <xs:element minOccurs="0" name="extensionText" type="xs:string" />
+                          <xs:element minOccurs="0" name="type" type="xs:string" />
+                          <xs:element minOccurs="0" name="limit" type="xs:string" />
+                          <xs:element minOccurs="0" name="annualPremium" type="xs:float" />
+                          <xs:element minOccurs="0" name="monthlyPremium" type="xs:float" />
+                          <xs:element minOccurs="0" name="taxAmount" type="xs:float" />
+                          <xs:element minOccurs="0" name="included" type="xs:boolean" />
+                          <xs:element minOccurs="0" name="exclusions" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="quoteErrors">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element minOccurs="0" name="errorDescription" type="xs:string" />
+                    <xs:element minOccurs="0" name="errorCode" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="errors">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="errorDescription" type="xs:string" />
+              <xs:element minOccurs="0" name="errorCode" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
