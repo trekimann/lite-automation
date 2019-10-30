@@ -15,6 +15,8 @@ namespace TestExecution
 {
     public partial class Form1 : Form
     {
+        private int apiPort = 26000;
+
         public class ElementIdentifierWrapper
         {//think of this as a DTO from the API, instead of using a reference to the front
             public String elementId { get; set; }
@@ -146,10 +148,10 @@ namespace TestExecution
                 var testsList = testExecutionGenerator.MagTestListPopulator.TestToExecute();
 
                 if (testsList != null && testsList.Count > 0)
-                {
+                {             
                     //set number of threads
                     String threadsToRun = ThreadNumberSelction.Value.ToString();
-                    var ThreadResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Threads/" + threadsToRun);
+                    var ThreadResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Threads/" + threadsToRun);
 
                     //if using local, change dir for dictionaryDirectory
                     if (UseLocalChkBx.Checked)
@@ -184,16 +186,17 @@ namespace TestExecution
                         }
                     }
 
-                    this.testsCurrentlyRunning = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Test/RunTest", testsList);
+                    this.testsCurrentlyRunning = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Test/RunTest", testsList);
+
 
                     var tests = testsCurrentlyRunning["TestIDs"];
-                    listener = new TestExecutorListener(26001, LogOutPut, this);
+                    listener = new TestExecutorListener(apiPort+1, LogOutPut, this);
                     listener.InitialiseListener();
 
                     foreach (KeyValuePair<string, JsonValue> nameID in tests)
                     {
                         int tabLocation = Int32.Parse(nameID.Value);
-                        var testTab = new TestRunnerTab(nameID.Key, nameID.Value);
+                        var testTab = new TestRunnerTab(nameID.Key, nameID.Value, apiPort);
                         testTab.Functions = Functions;
                         testTab.createTestRunnerTab();
                         //this.TestRunnerPanel.Controls.Add(testTab.TestRunTab);
@@ -247,7 +250,7 @@ namespace TestExecution
         private void StartPause_Click(object sender, EventArgs e)
         {
 
-            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Pause/" + this.StartPause.Name);
+            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Pause/" + this.StartPause.Name);
             if (testResponse["Paused"])
             {
                 this.StartPause.Text = "Play";
@@ -261,7 +264,7 @@ namespace TestExecution
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Stop/" + this.StopBut.Name);
+            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Stop/" + this.StopBut.Name);
         }
 
         private void SearchForTermBtn_Click(object sender, EventArgs e)
@@ -282,7 +285,7 @@ namespace TestExecution
             searchRequest.SearchTerm = term + "---***---" + Journey;
             searchRequest.Directory = testDirectoryFind.FileName;
 
-            var searchResult = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/CheckDefinition", searchRequest);
+            var searchResult = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/CheckDefinition", searchRequest);
             searchRequest = JsonConvert.DeserializeObject<ExpandoObject>(searchResult.ToString());
 
             Boolean found = (Boolean)searchRequest.Found;
@@ -323,7 +326,7 @@ namespace TestExecution
                 dynamic request = new ExpandoObject();
                 request.Directory = file;
 
-                var responseJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/DictionaryTools/Dictionary", request);
+                var responseJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/DictionaryTools/Dictionary", request);
 
                 var mainDictionary = JsonConvert.DeserializeObject<Dictionary<String, Dictionary<String, ElementIdentifierWrapper>>>(responseJson.ToString());
 
@@ -415,7 +418,7 @@ namespace TestExecution
             defintionObject.identifier = Identifier;
             defintionObject.Directory = file;
 
-            var searchResultJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/AddDefintion", defintionObject);
+            var searchResultJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/AddDefintion", defintionObject);
 
             dynamic searchResult = JsonConvert.DeserializeObject<ExpandoObject>(searchResultJson.ToString());
 
@@ -457,7 +460,7 @@ namespace TestExecution
             searchTerms.Directory = testDirectoryFind.FileName;
             searchTerms.PhasesDirectory = @"O:\SeleniumLite\EXPERIMENTAL\Journeys";//hard coded for now until a dedicated textbox is added
 
-            var searchResult = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/CheckDefinition/LocateInPhases", searchTerms);
+            var searchResult = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/CheckDefinition/LocateInPhases", searchTerms);
 
             //rebuild expando and pull details from it
             dynamic response = JsonConvert.DeserializeObject<ExpandoObject>(searchResult.ToString());
@@ -499,7 +502,7 @@ namespace TestExecution
                         dynamic objectToSend = new ExpandoObject();
                         objectToSend.MouseX = position.X;
                         objectToSend.MouseY = position.Y;
-                        JsonObject returnedDetails = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/ElementAtPosition/", objectToSend);
+                        JsonObject returnedDetails = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/ElementAtPosition/", objectToSend);
 
                         dynamic elementDetails = JsonConvert.DeserializeObject<ExpandoObject>(returnedDetails.ToString());
 
@@ -577,7 +580,7 @@ namespace TestExecution
             webInfo.ChromeDirectory = @"O:\SeleniumLite\EXPERIMENTAL\SeleniumBackEnd\WebDrivers";
             webInfo.Url = DevUrlTxtBox.Text;
 
-            var testResponse = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/ElementAtPosition/StartDriver", webInfo);
+            var testResponse = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/ElementAtPosition/StartDriver", webInfo);
 
             StartMouseListen.Enabled = true;
         }
@@ -585,7 +588,7 @@ namespace TestExecution
         private void CloseDriverBtn_Click(object sender, EventArgs e)
         {
             StopMouseThread();
-            RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Dev/ElementAtPosition/CloseDriver");
+            RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Dev/ElementAtPosition/CloseDriver");
             CloseDriverBtn.Enabled = false;
 
             StartMouseListen.Enabled = false;
@@ -862,7 +865,12 @@ namespace TestExecution
             request.FirstDirectory = TxtBxFirstDictionaryLocation.Text;
             request.SecondDirectory = TxtBxSecondDictionaryLocation.Text;
 
-            var responseJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Dev/DictionaryTools/DictionaryMerge", request);            
-        }        
+            var responseJson = RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Dev/DictionaryTools/DictionaryMerge", request);            
+        }
+
+        private void ListenerPortNum_ValueChanged(object sender, EventArgs e)
+        {
+            apiPort = Int32.Parse(ListenerPortNum.Value.ToString());
+        }
     }
 }

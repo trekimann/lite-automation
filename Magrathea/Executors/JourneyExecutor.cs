@@ -26,12 +26,13 @@ namespace Magrathea.Executors
         private HttpWebOutgoing networkMessaging;
         private Boolean QuitOnComplete = false;
         public Boolean TestComplete { get; private set; } = false;
-
+        private int apiPort { get; set; }
 
         public JourneyExecutor(MultiThreadedExecutor multiThreadedExecutor, HttpWebOutgoing networkMessaging)
         {
             this.handler = multiThreadedExecutor;
             this.networkMessaging = networkMessaging;
+            this.apiPort = multiThreadedExecutor.apiPort;
         }
 
         public Object Screenshot()
@@ -83,6 +84,7 @@ namespace Magrathea.Executors
             //driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(90);
             // Create Test Logger
             logger = new TestLogger(testInfo, networkMessaging, handler.Reporter);
+            logger.SetTestPort(apiPort);
             //add driver to logger
             logger.driver = driver;
 
@@ -148,7 +150,7 @@ namespace Magrathea.Executors
             if (handler.TestsToRun() == handler.TestsFinished)
             {
                 Console.WriteLine("All Tests Complete. Killing processes");
-                networkMessaging.SendStringInBody(26001, "", "System Message", "All Completed");
+                networkMessaging.SendStringInBody(apiPort, "", "System Message", "All Completed");
                 handler.Reporter.EndReport();
                 executor.WindowSwitching.OpenNewTab(logger.Reporter.FileLocation, "report");
                 CmdProcessKill();

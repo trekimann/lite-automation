@@ -18,6 +18,7 @@ using System.IO;
 using HttpWebServices;
 using Magrathea.DevelopmentTools;
 using Selenium;
+using System.Web.Http.Controllers;
 
 namespace SelfHostApi
 {
@@ -30,9 +31,26 @@ namespace SelfHostApi
 
     public class XmlController : ApiController
     {
-        static HttpWebOutgoing networkMessaging = new HttpWebOutgoing();
-        static MultiThreadedExecutor multiExe = new MultiThreadedExecutor(networkMessaging);
-        static LocateElementByClick locate = new LocateElementByClick();
+        private static HttpWebOutgoing networkMessaging { get; set; }
+        private static MultiThreadedExecutor multiExe { get; set; }
+        private static LocateElementByClick locate { get; set; }
+
+    protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext);
+            if(networkMessaging == null)
+            {
+            networkMessaging = new HttpWebOutgoing();
+            locate = new LocateElementByClick();
+            var port = ((System.Web.Http.SelfHost.HttpSelfHostConfiguration)controllerContext.Configuration).BaseAddress.Port;
+
+            multiExe = new MultiThreadedExecutor(networkMessaging, port+1);
+            }
+        }
+
+        //static HttpWebOutgoing networkMessaging = new HttpWebOutgoing();
+        //static MultiThreadedExecutor multiExe = new MultiThreadedExecutor(networkMessaging,26000);
+        //static LocateElementByClick locate = new LocateElementByClick();
 
         private StringComparison ignoringCase = StringComparison.InvariantCultureIgnoreCase;
         //----------------------------------------------------Gets---------------------------------------

@@ -21,6 +21,7 @@ namespace TestExecution
         public ListBox ElementsBox { get; private set; }
         public Button BtnAddFunction { get; private set; }
         public Button BtnExecuteFunction { get; private set; }
+        private int apiPort { get; set; }
 
 
         public TabPage MotherPage { get; private set; }
@@ -35,47 +36,13 @@ namespace TestExecution
         public Boolean TestEnded { get; set; } = false;
 
         public Dictionary<String, String> Functions { get; set; }
-        //    = new Dictionary<string, string>()
-        //{
-        //    {"click","<elementManager type = \"click\" target= \"ELEMENT IDENTIFIER\"/>"},
-        //    {"sendkeys","<elementManager type= \"sendkeys\" target= \"ELEMENT IDENTIFIER\">PHASEVALUE TO SEND</elementManager>"},
-        //    {"pause","<elementManager type= \"pause\" value = \"indefinite\"/>"},
-        //    {"elementAvailable","<elementManager type= \"elementAvailable\" target= \"ELEMENT IDENTIFIER\"/>"},
-        //    {"getText","<elementManager type= \"getText\" target= \"ELEMENT IDENTIFIER\"/>"},
-        //    {"selectFirstOption","<elementManager type= \"selectFirstOption\" target= \"ELEMENT IDENTIFIER\"/>"},
-        //    {"scrollTo","<elementManager type= \"scrollTo\" target= \"ELEMENT IDENTIFIER\"/>"},
-        //    {"setPhaseValue","<setPhaseValue name = \"\" type = \"\">VALUE</setPhaseValue>"},
-        //    {"getPhaseValue","<getPhaseValue target=\"\"/>"},
-        //    {"disposePhaseValue ","<disposePhaseValue  target=\"\"/>"},
-        //    {"screenshot","<testLogger type= \"screenshot\"/>"},
-        //    {"recordToFile","<testLogger type= \"recordToFile\" status= \"info\"></testLogger>"},
-        //    {"getUrl","<selenium type= \"geturl\"/>"},
-        //    {"endTest","<selenium type= \"endTest\"/>"},
-        //    {"navigateToUrl","<selenium type = \"navigateToUrl\">URL GOES HERE</selenium>"},
-        //    {"ifBoolean","<if type= \"ifBoolean\" condition = \"\">PHASEVALUE"+Environment.NewLine+"</if>"},
-        //    {"ifString","<if type= \"ifString\" condition = \"\" stringsToMatch=\"\">PHASEVALUE"+Environment.NewLine+"</if>"},
-        //    {"ifInt","<if type= \"ifInt\" condition = \"\" int=\"\">PHASEVALUE"+Environment.NewLine+"</if>"},
-        //    {"ifNull","<if type= \"ifNull\" condition = \"\" >PHASEVALUE"+Environment.NewLine+"</if>"},
-        //    {"newTab_PhaseValue","<windowControl type=\"newTab\" tabName = \"\" target = \"PHASEVALUE\" />"},
-        //    {"newTab_Hardcoded","<windowControl type=\"newTab\" tabName = \"\" >URL GOES HERE</windowControl>"},
-        //    {"closeTab_tabName","<windowControl type=\"closeTab\" tabName = \"\" />"},
-        //    {"closeTab_current","<windowControl type=\"closeTab\" />"},
-        //    {"checkForNewTab","<windowControl type = \"checkForNewTab\"/>"},
-        //    {"switchToTab_PhaseValue","<windowControl type=\"switchToTab\">PHASEVALUE</windowControl>"},
-        //    {"switchToTab_Hardcoded","<windowControl type=\"switchToTab\" tabName = \"HARD_CODED\"/>"},
-        //    {"getWindowTitle","<windowControl type = \"getWindowTitle\"/>"},
-        //    {"setWindowTitle_PhaseValue","<windowControl type=\"setWindowTitle\">PHASEVALUE</windowControl>"},
-        //    {"setWindowTitle_Hardcoded","<windowControl type=\"setWindowTitle\" tabName = \"HARD_CODED\"/>"},
-        //    {"resize","<windowControl type=\"resize\" height = \"full\" width = \"500\"/>"},
-        //    {"innerFunction","<innerFunction name=\"secondJob\">"+Environment.NewLine+"<innerFunction/>"},
-        //    {"innerFunctionCall","<innerFunctionCall target =\"\"/>"},
-        //    {"Phase","<Phase name= \"\" package = \"\" />"}
-        //};
+        
 
-        public TestRunnerTab(string key, JsonValue value)
+        public TestRunnerTab(string key, JsonValue value, int apiPort)
         {
             this.testName = key;
             this.testId = value;
+            this.apiPort = apiPort;
         }
 
         public void DevelopmentTabCreation()
@@ -188,7 +155,7 @@ namespace TestExecution
             dynamic toSend = new ExpandoObject();
             toSend.TestId = Int32.Parse(testId.ToString().Replace("\"", ""));
             toSend.Function = Functions;
-            RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Test/TestFunction", toSend);            
+            RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Test/TestFunction", toSend);            
             
         }
 
@@ -374,7 +341,7 @@ namespace TestExecution
 
         private void FocusButton_Click(object sender, EventArgs e)
         {
-           var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/FocusWindow/" + this.testId + "/");
+           var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/FocusWindow/" + this.testId + "/");
 
             Console.WriteLine(testResponse.ToString());
         }
@@ -385,7 +352,7 @@ namespace TestExecution
             dynamic toSend = new ExpandoObject();
             toSend.TestId = Int32.Parse(testId.ToString().Replace("\"",""));
 
-            JsonValue tracking= RestClient.makeRequest(httpVerb.POST, @"http://localhost:26000/Test/ElementAtPosition",toSend);
+            JsonValue tracking= RestClient.makeRequest(httpVerb.POST, @"http://localhost:"+apiPort+"/Test/ElementAtPosition",toSend);
 
             Console.WriteLine("breakPoint");
 
@@ -394,14 +361,14 @@ namespace TestExecution
 
         private void ScreenshotClick(object sender, EventArgs e)
         {
-            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Screenshot/" + this.testId + "/");
+            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Screenshot/" + this.testId + "/");
 
             Console.WriteLine(testResponse.ToString());
         }        
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Stop/" + this.testId + "/");
+            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Stop/" + this.testId + "/");
             TestRunTab.ImageIndex = 1;
             MotherPage.ImageIndex = 1;
             DisableButtons();
@@ -410,7 +377,7 @@ namespace TestExecution
         private void StartPause_Click(object sender, EventArgs e)
         {
 
-            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:26000/Test/Pause/" + this.testId + "/");
+            var testResponse = RestClient.makeRequest(httpVerb.GET, @"http://localhost:"+apiPort+"/Test/Pause/" + this.testId + "/");
             if (testResponse["Paused"])
             {
                 this.StartPause.Text = "Play";

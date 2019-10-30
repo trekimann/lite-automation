@@ -116,6 +116,8 @@
             this.RTB_SplashScreen_ChangeLog = new System.Windows.Forms.RichTextBox();
             this.BtnInfo = new System.Windows.Forms.Button();
             this.UserName = new System.Windows.Forms.Label();
+            this.ListenerPortNum = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
             this.TestRunnerPanel.SuspendLayout();
             this.TestExecution.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ThreadNumberSelction)).BeginInit();
@@ -130,6 +132,7 @@
             this.DictionaryMergeTab.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SplashLanding.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ListenerPortNum)).BeginInit();
             this.SuspendLayout();
             // 
             // TestRunnerPanel
@@ -150,6 +153,8 @@
             // 
             this.TestExecution.AutoScroll = true;
             this.TestExecution.BackColor = System.Drawing.Color.DimGray;
+            this.TestExecution.Controls.Add(this.label16);
+            this.TestExecution.Controls.Add(this.ListenerPortNum);
             this.TestExecution.Controls.Add(this.label9);
             this.TestExecution.Controls.Add(this.ThreadNumberSelction);
             this.TestExecution.Controls.Add(this.UseLocalChkBx);
@@ -168,15 +173,15 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.label9.Location = new System.Drawing.Point(491, 11);
+            this.label9.Location = new System.Drawing.Point(365, 11);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(70, 13);
+            this.label9.Size = new System.Drawing.Size(46, 13);
             this.label9.TabIndex = 7;
-            this.label9.Text = "Test Threads";
+            this.label9.Text = "Threads";
             // 
             // ThreadNumberSelction
             // 
-            this.ThreadNumberSelction.Location = new System.Drawing.Point(447, 6);
+            this.ThreadNumberSelction.Location = new System.Drawing.Point(327, 6);
             this.ThreadNumberSelction.Maximum = new decimal(new int[] {
             5,
             0,
@@ -188,7 +193,7 @@
             0,
             0});
             this.ThreadNumberSelction.Name = "ThreadNumberSelction";
-            this.ThreadNumberSelction.Size = new System.Drawing.Size(38, 20);
+            this.ThreadNumberSelction.Size = new System.Drawing.Size(32, 20);
             this.ThreadNumberSelction.TabIndex = 6;
             this.ThreadNumberSelction.Value = new decimal(new int[] {
             1,
@@ -200,7 +205,7 @@
             // 
             this.UseLocalChkBx.AutoSize = true;
             this.UseLocalChkBx.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.UseLocalChkBx.Location = new System.Drawing.Point(669, 10);
+            this.UseLocalChkBx.Location = new System.Drawing.Point(692, 9);
             this.UseLocalChkBx.Name = "UseLocalChkBx";
             this.UseLocalChkBx.Size = new System.Drawing.Size(97, 17);
             this.UseLocalChkBx.TabIndex = 5;
@@ -217,7 +222,7 @@
             // 
             // ExecuteTestsButton
             // 
-            this.ExecuteTestsButton.Location = new System.Drawing.Point(567, 6);
+            this.ExecuteTestsButton.Location = new System.Drawing.Point(590, 6);
             this.ExecuteTestsButton.Name = "ExecuteTestsButton";
             this.ExecuteTestsButton.Size = new System.Drawing.Size(96, 23);
             this.ExecuteTestsButton.TabIndex = 3;
@@ -227,7 +232,7 @@
             // 
             // GetTestsButton
             // 
-            this.GetTestsButton.Location = new System.Drawing.Point(298, 5);
+            this.GetTestsButton.Location = new System.Drawing.Point(230, 4);
             this.GetTestsButton.Name = "GetTestsButton";
             this.GetTestsButton.Size = new System.Drawing.Size(91, 23);
             this.GetTestsButton.TabIndex = 1;
@@ -238,7 +243,7 @@
             // 
             this.DirectoryToTests.Location = new System.Drawing.Point(6, 6);
             this.DirectoryToTests.Name = "DirectoryToTests";
-            this.DirectoryToTests.Size = new System.Drawing.Size(286, 20);
+            this.DirectoryToTests.Size = new System.Drawing.Size(218, 20);
             this.DirectoryToTests.TabIndex = 0;
             // 
             // CreationToolTab
@@ -1037,6 +1042,39 @@
             this.UserName.TabIndex = 3;
             this.UserName.Text = "label16";
             // 
+            // ListenerPortNum
+            // 
+            this.ListenerPortNum.Location = new System.Drawing.Point(417, 7);
+            this.ListenerPortNum.Maximum = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            this.ListenerPortNum.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.ListenerPortNum.Name = "ListenerPortNum";
+            this.ListenerPortNum.Size = new System.Drawing.Size(52, 20);
+            this.ListenerPortNum.TabIndex = 8;
+            this.ListenerPortNum.Value = new decimal(new int[] {
+            26000,
+            0,
+            0,
+            0});
+            this.ListenerPortNum.ValueChanged += new System.EventHandler(this.ListenerPortNum_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label16.Location = new System.Drawing.Point(475, 9);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(44, 13);
+            this.label16.TabIndex = 9;
+            this.label16.Text = "Api Port";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1074,6 +1112,7 @@
             this.tabPage2.PerformLayout();
             this.SplashLanding.ResumeLayout(false);
             this.SplashLanding.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ListenerPortNum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1167,6 +1206,8 @@
         private System.Windows.Forms.Button BtnInfo;
         private System.Windows.Forms.Label UserName;
         private System.Windows.Forms.Button LoadTestBtn;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown ListenerPortNum;
     }
 }
 

@@ -31,11 +31,13 @@ public class MultiThreadedExecutor
         private static Dictionary<String, ThreadGroup> ThreadMap = new Dictionary<string, ThreadGroup>();
         private HttpWebOutgoing networkMessaging;
         public HtmlReporter Reporter { get; private set; } = new HtmlReporter();
+        public int apiPort { get; private set; }
 
 
-        public MultiThreadedExecutor(HttpWebOutgoing networkMessaging)
+        public MultiThreadedExecutor(HttpWebOutgoing networkMessaging, int port)
         {
             this.networkMessaging = networkMessaging;
+            this.apiPort = port;
         }
 
         public void ExecuteThreadedTests()
@@ -74,7 +76,7 @@ public class MultiThreadedExecutor
         {
             ThreadMap.Clear();
             TestNumber = 0;
-            networkMessaging.SendStringInBody(26001, "", "System Message", "All Completed");
+            networkMessaging.SendStringInBody(apiPort, "", "System Message", "All Completed");
         }
         
         public void ExecuteNextTest()
@@ -103,7 +105,7 @@ public class MultiThreadedExecutor
                 {
                     Reporter.EndReport();
                     ClearThreadList();
-                    networkMessaging.SendStringInBody(26001, "", "System Message", "All Completed");
+                    networkMessaging.SendStringInBody(apiPort, "", "System Message", "All Completed");
                 }
             }
         }
@@ -132,9 +134,9 @@ public class MultiThreadedExecutor
         {
             var Test = TestList[testNumber];
             string uri = @"Test/Message/" + Test.TestNumber;
-            networkMessaging.SendStringInBody(26001, uri, "Log Message", "----------Test Ended----------", Test.TestNumber.ToString());
+            networkMessaging.SendStringInBody(apiPort, uri, "Log Message", "----------Test Ended----------", Test.TestNumber.ToString());
 
-            //networkMessaging.SendStringInBody(26001, uri, "System Message", "Test Ended", Test.testNumber.ToString());
+            //networkMessaging.SendStringInBody(apiPort, uri, "System Message", "Test Ended", Test.testNumber.ToString());
 
             TestsFinished++;
         }
@@ -169,9 +171,9 @@ public class MultiThreadedExecutor
             toReturn.Paused = journeyExecutor.PauseTest();
 
             string uri = @"Test/Message/" + Test.TestNumber;
-            networkMessaging.SendStringInBody(26001, uri, "System Message", "Test Pause", Test.TestNumber.ToString());
+            networkMessaging.SendStringInBody(apiPort, uri, "System Message", "Test Pause", Test.TestNumber.ToString());
 
-            networkMessaging.SendStringInBody(26001, uri, "Log Message", "Test Paused: "+toReturn.Paused, Test.TestNumber.ToString());
+            networkMessaging.SendStringInBody(apiPort, uri, "Log Message", "Test Paused: "+toReturn.Paused, Test.TestNumber.ToString());
 
             //Console.WriteLine("Pause Toggling: "+testName);
             return toReturn;

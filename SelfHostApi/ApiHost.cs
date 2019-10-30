@@ -55,7 +55,13 @@ namespace SelfHostApi
     {
         static void Main(string[] args)
         {
-            string portNumber = "26000";
+            // FindOpenPort();
+            Console.WriteLine("Enter Port Number. Defaults to 26000");
+            string portNumber = Console.ReadLine();
+            if(portNumber == "")
+            {
+                portNumber = "26000";
+            }
             string baseAddress = "http://localhost:"+portNumber;
             var config = new HttpSelfHostConfiguration(baseAddress);
             config.MapHttpAttributeRoutes();
@@ -68,6 +74,7 @@ namespace SelfHostApi
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
             config.Formatters.Add(new TextMediaTypeFormatter());
 
+            int pn = Int32.Parse(portNumber);
             try
             {
                 using (HttpSelfHostServer server = new HttpSelfHostServer(config))
@@ -75,7 +82,7 @@ namespace SelfHostApi
                     Console.WriteLine("Starting server");
                     server.OpenAsync().Wait();
                     Console.WriteLine("Server open on " + baseAddress);
-                    Console.WriteLine("Listen for test output messages on :26001");
+                    Console.WriteLine("Listen for test output messages on :"+(pn));
                     Console.WriteLine("Press enter to close");
                     Console.ReadLine();
                     server.CloseAsync();
@@ -88,6 +95,50 @@ namespace SelfHostApi
                 Console.WriteLine(e.ToString());
                 Console.WriteLine("--------------------------------------------------------");
                 Console.WriteLine("Press Enter to close");
+            }
+        }
+
+        static void FindOpenPort()
+        {
+            List<Int32> portsToSkip = new List<Int32>() {8180, 8580, 8080, 8280};
+            // loop though ports with try catch to open a port
+
+            for (int i = 1000; i < 30000; i++)
+            {
+                if (!portsToSkip.Contains(i))
+                {
+                string portNumber = i.ToString();
+                string baseAddress = "http://localhost:" + portNumber;
+                var config = new HttpSelfHostConfiguration(baseAddress);
+                config.MapHttpAttributeRoutes();
+                config.Routes.MapHttpRoute(
+                    name: "DefaultApi",
+                    routeTemplate: "{controller}",
+                    defaults: new { id = RouteParameter.Optional }
+                );
+
+                config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+                config.Formatters.Add(new TextMediaTypeFormatter());
+
+                try
+                {
+                    using (HttpSelfHostServer server = new HttpSelfHostServer(config))
+                    {
+                        Console.WriteLine("Starting server on "+baseAddress);
+                        server.OpenAsync().Wait();
+                        Console.WriteLine("Server open on " + baseAddress);
+                        Console.WriteLine("Port "+i+" is open");
+                        Console.WriteLine("Press enter to close");
+                        Console.ReadLine();
+                        server.CloseAsync();
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(i+" Is not availible, trying next port");
+                }
+                }
             }
         }
     }
