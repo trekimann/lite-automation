@@ -35,16 +35,16 @@ namespace SelfHostApi
         private static MultiThreadedExecutor multiExe { get; set; }
         private static LocateElementByClick locate { get; set; }
 
-    protected override void Initialize(HttpControllerContext controllerContext)
+        protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            if(networkMessaging == null)
+            if (networkMessaging == null)
             {
-            networkMessaging = new HttpWebOutgoing();
-            locate = new LocateElementByClick();
-            var port = ((System.Web.Http.SelfHost.HttpSelfHostConfiguration)controllerContext.Configuration).BaseAddress.Port;
+                networkMessaging = new HttpWebOutgoing();
+                locate = new LocateElementByClick();
+                var port = ((System.Web.Http.SelfHost.HttpSelfHostConfiguration)controllerContext.Configuration).BaseAddress.Port;
 
-            multiExe = new MultiThreadedExecutor(networkMessaging, port+1);
+                multiExe = new MultiThreadedExecutor(networkMessaging, port + 1);
             }
         }
 
@@ -52,7 +52,7 @@ namespace SelfHostApi
         //static MultiThreadedExecutor multiExe = new MultiThreadedExecutor(networkMessaging,26000);
         //static LocateElementByClick locate = new LocateElementByClick();
 
-        private StringComparison ignoringCase = StringComparison.InvariantCultureIgnoreCase;
+        private StringComparison IgC = StringComparison.InvariantCultureIgnoreCase;
         //----------------------------------------------------Gets---------------------------------------
         //-----Xml controller----
         [HttpGet]
@@ -91,8 +91,8 @@ namespace SelfHostApi
             var found = false;
             foreach (XElement journeyElement in journeys)
             {
-                if ((journeyElement.Attribute("name").Value.Equals(innerJourney, ignoringCase))
-                    && journeyElement.Name.ToString().Equals("innerJourneyOrder", ignoringCase))
+                if ((journeyElement.Attribute("name").Value.Equals(innerJourney, IgC))
+                    && journeyElement.Name.ToString().Equals("innerJourneyOrder", IgC))
                 {
                     requestedJourneyElement = journeyElement;
                     found = true;
@@ -149,7 +149,7 @@ namespace SelfHostApi
             var found = false;
             foreach (XElement journeyElement in journeys)
             {
-                if (journeyElement.Attribute("name").Value.Equals(journey, ignoringCase))
+                if (journeyElement.Attribute("name").Value.Equals(journey, IgC))
                 {
                     requestedJourneyElement = journeyElement;
                     found = true;
@@ -256,7 +256,7 @@ namespace SelfHostApi
         public Object ManualScreenshot(int testNumber)
         {
             return multiExe.Screenshot(testNumber);
-        }        
+        }
 
         [HttpGet]
         [Route("Test/Stop/{testNumber}")]
@@ -293,7 +293,7 @@ namespace SelfHostApi
         public Object CloseDevDriver()
         {
             dynamic toReturn = new ExpandoObject();
-                locate.closeDriver();
+            locate.closeDriver();
             return toReturn;
         }
 
@@ -343,7 +343,7 @@ namespace SelfHostApi
             dynamic searchTerms = JsonConvert.DeserializeObject<ExpandoObject>(detailsCheck.ToString());
             List<object> objectList = searchTerms.ListOfSearchTerms;
             List<String> idsToFind = new List<string>();
-            foreach(var id in objectList)
+            foreach (var id in objectList)
             {
                 idsToFind.Add((String)id);
             }
@@ -353,15 +353,17 @@ namespace SelfHostApi
             try
             {
                 directory = searchTerms.Directory;
-            }catch(Exception e)
-            {}
+            }
+            catch (Exception e)
+            { }
             //if phase location included use that, otherwise use O drive
             String PhasesDirectory = @"O:\SeleniumLite\EXPERIMENTAL\Journeys";
             try
             {
                 PhasesDirectory = searchTerms.PhasesDirectory;
-            }catch(Exception e)
-            {}
+            }
+            catch (Exception e)
+            { }
 
             DictionaryTools tools = new DictionaryTools(directory);
             toReturn = tools.CheckForDefintionInPhases(idsToFind, PhasesDirectory);
@@ -400,13 +402,14 @@ namespace SelfHostApi
             dynamic toReturn = new ExpandoObject();
 
             dynamic checkInfo = JsonConvert.DeserializeObject<ExpandoObject>(detailsCheck.ToString());
-            
+
             string SearchTerm = checkInfo.SearchTerm;
             try
             {
-                int TestId = (int) checkInfo.TestId;
+                int TestId = (int)checkInfo.TestId;
                 toReturn = multiExe.CheckDefinition(TestId, SearchTerm);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 string directory = checkInfo.Directory;
                 //if there is no id, prob calling from front end with no test
@@ -428,7 +431,7 @@ namespace SelfHostApi
             String chromeDirectory = webInfo.ChromeDirectory;
             String url = webInfo.Url;
 
-            locate.launchDriver(chromeDirectory,url);
+            locate.launchDriver(chromeDirectory, url);
 
             return toReturn;
         }
@@ -437,7 +440,7 @@ namespace SelfHostApi
         [Route("Dev/ElementAtPosition")]
         public Object GetElementsUnderClick([FromBody] Object mousePosition)
         {
-            dynamic toReturn=new ExpandoObject();
+            dynamic toReturn = new ExpandoObject();
             toReturn.id = "No Element Found";
             toReturn.name = "No Element Found";
             toReturn.xPath = "No Element Found";
@@ -487,7 +490,7 @@ namespace SelfHostApi
 
             //get test id
             dynamic testInfo = JsonConvert.DeserializeObject<ExpandoObject>(testId.ToString());
-            int test = (int) testInfo.TestId;
+            int test = (int)testInfo.TestId;
             toReturn = multiExe.StartMouseTracking(test);
 
             return toReturn;
@@ -497,52 +500,53 @@ namespace SelfHostApi
         [Route("Test/RunTest")]
         public Object RunTest([FromBody] Object testInfo)
         {
-            try { 
-            //JsonValue castToSystem = JsonValue.Parse((testInfo.ToString()));
-            //find type of object
-            string type = testInfo.GetType().ToString();
-            dynamic toReturn = new ExpandoObject();
-
-            if (type.Equals("Newtonsoft.Json.Linq.JObject"))
+            try
             {
-                var testToRun = JsonConvert.DeserializeObject<TestInformation>(testInfo.ToString());
-                List<TestInformation> singleTest = new List<TestInformation>();
-                singleTest.Add(testToRun);
-                multiExe.TestList = singleTest;
-                multiExe.ExecuteThreadedTests();
-                toReturn.TestName = testToRun.TestName;
-                toReturn.WebBrowser = testToRun.WebBrowser;
+                //JsonValue castToSystem = JsonValue.Parse((testInfo.ToString()));
+                //find type of object
+                string type = testInfo.GetType().ToString();
+                dynamic toReturn = new ExpandoObject();
 
-                if (testToRun.MobileEmulation != null)
+                if (type.Equals("Newtonsoft.Json.Linq.JObject"))
                 {
-                    toReturn.MobileEmulation = testToRun.MobileEmulation;
-                }
+                    var testToRun = JsonConvert.DeserializeObject<TestInformation>(testInfo.ToString());
+                    List<TestInformation> singleTest = new List<TestInformation>();
+                    singleTest.Add(testToRun);
+                    multiExe.TestList = singleTest;
+                    multiExe.ExecuteThreadedTests();
+                    toReturn.TestName = testToRun.TestName;
+                    toReturn.WebBrowser = testToRun.WebBrowser;
 
-                toReturn.Status = "Executing";
-                toReturn.ID = "0";
-            }
-            else if (type.Equals("Newtonsoft.Json.Linq.JArray"))
-            {
-                var testList = JsonConvert.DeserializeObject<List<TestInformation>>(testInfo.ToString());
-                multiExe.TestList = testList;
-                toReturn.Message = "Running " + testList.Count + " Tests";
-                toReturn.RunningThreads = multiExe.NumberOfThreads;
-                int testId = 0;
-                toReturn.TestIDs = new OrderedDictionary();
-                foreach (TestInformation info in testList)
-                {
-                    info.TestNumber = testId;
-                    toReturn.TestIDs.Add(info.TestName + "-" + info.WebBrowser, testId.ToString());
-                    testId++;
+                    if (testToRun.MobileEmulation != null)
+                    {
+                        toReturn.MobileEmulation = testToRun.MobileEmulation;
+                    }
+
+                    toReturn.Status = "Executing";
+                    toReturn.ID = "0";
                 }
-                multiExe.ExecuteThreadedTests();
+                else if (type.Equals("Newtonsoft.Json.Linq.JArray"))
+                {
+                    var testList = JsonConvert.DeserializeObject<List<TestInformation>>(testInfo.ToString());
+                    multiExe.TestList = testList;
+                    toReturn.Message = "Running " + testList.Count + " Tests";
+                    toReturn.RunningThreads = multiExe.NumberOfThreads;
+                    int testId = 0;
+                    toReturn.TestIDs = new OrderedDictionary();
+                    foreach (TestInformation info in testList)
+                    {
+                        info.TestNumber = testId;
+                        toReturn.TestIDs.Add(info.TestName + "-" + info.WebBrowser, testId.ToString());
+                        testId++;
+                    }
+                    multiExe.ExecuteThreadedTests();
+                }
+                return toReturn;
             }
-            return toReturn;
-            }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Run Test Crashed");
-                Console.WriteLine( e.ToString());
+                Console.WriteLine(e.ToString());
                 return e.ToString();
             }
         }
@@ -581,13 +585,13 @@ namespace SelfHostApi
             dynamic toReturn = new ExpandoObject();
             dynamic FunctionToTest = JsonConvert.DeserializeObject<ExpandoObject>(functionToTest.ToString());
             int test = (int)FunctionToTest.TestId;
-            List<Object> listOfElements= FunctionToTest.Function;
+            List<Object> listOfElements = FunctionToTest.Function;
             List<XElement> FunctionsToTest = new List<XElement>();
             foreach (Object element in listOfElements)
             {
                 FunctionsToTest.Add(XElement.Parse((String)element));
             }
-             
+
             toReturn = multiExe.TestFunction(test, FunctionsToTest);
 
             return toReturn;
@@ -612,7 +616,7 @@ namespace SelfHostApi
             //find list of journey
             var Journey = TestScript["testData"];
 
-            if (Journey.JsonType.ToString().Equals("Object", ignoringCase))
+            if (Journey.JsonType.ToString().Equals("Object", IgC))
             {
                 JsonToJourney(root, Journey);
             }
@@ -647,7 +651,7 @@ namespace SelfHostApi
             //find phase names
             var phases = journeyGroup["phaseData"];
             //check if only one thing
-            if (phases.JsonType.ToString().Equals("Object", ignoringCase))
+            if (phases.JsonType.ToString().Equals("Object", IgC))
             {
                 JsonToPhase(journeyElement, phases);
             }
@@ -717,7 +721,7 @@ namespace SelfHostApi
 
                         var trimItem = item.Trim();
 
-                        if (trimItem.StartsWith("value", ignoringCase))
+                        if (trimItem.StartsWith("value", IgC))
                         {
                             string phaseValue = trimItem.Split(':')[1].Trim();
                             PhaseValue.Value = phaseValue;
@@ -773,23 +777,23 @@ namespace SelfHostApi
             string _InputType = (string)GetValue(element, "type");
             if (!_InputType.Equals(""))
             {
-                if (_InputType.Equals("int", ignoringCase))
+                if (_InputType.Equals("int", IgC))
                 {
                     _InputType = "number";
                 }
-                else if (_InputType.Equals("string", ignoringCase))
+                else if (_InputType.Equals("string", IgC))
                 {
                     _InputType = "text";
                 }
-                else if (_InputType.Equals("boolean", ignoringCase))
+                else if (_InputType.Equals("boolean", IgC))
                 {
                     _InputType = "checkbox";
                 }
-                else if (_InputType.Equals("dateTime", ignoringCase))
+                else if (_InputType.Equals("dateTime", IgC))
                 {
                     _InputType = "date";
                 }
-                else if (_InputType.Equals("dropDown", ignoringCase))
+                else if (_InputType.Equals("dropDown", IgC))
                 {
                     _InputType = "dropdown";
                     //if its a dropdown, loop though children elements and get the options
@@ -800,7 +804,7 @@ namespace SelfHostApi
                         magPhase.dropDownItems.Add(drop.FirstNode.ToString().Trim());
                     }
                 }
-                else if (_InputType.Equals("list", ignoringCase))
+                else if (_InputType.Equals("list", IgC))
                 {
                     _InputType = "list";
                     List<XElement> listItems = element.Elements().ToList();

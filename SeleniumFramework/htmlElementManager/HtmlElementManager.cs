@@ -96,7 +96,7 @@ namespace Selenium.htmlElementManager
 
 
                 logger.recordOutcome("---------------Sorry Page Hit---------------", "Warning");
-                logger.recordOutcome(reason, "Warning");
+                logger.recordOutcome("Reason from Edge: "+reason, "Warning");
                 Console.WriteLine("sorry Hit");
                 logger.screenshot();
                 //driver.Close();

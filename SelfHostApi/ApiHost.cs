@@ -115,6 +115,7 @@ namespace SelfHostApi
                     Console.ReadLine();
                 }
             }
+            Console.ReadLine();
         }
 
         static string FindOpenPort()
@@ -122,7 +123,7 @@ namespace SelfHostApi
             List<Int32> portsToSkip = new List<Int32>() { 8180, 8580, 8080, 8280 };
             // loop though ports with try catch to open a port
 
-            for (int i = 1000; i < 30000; i++)
+            for (int i = 1; i < 65535; i++)
             {
                 if (!portsToSkip.Contains(i))
                 {
