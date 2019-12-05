@@ -408,13 +408,13 @@ namespace Selenium.htmlElementManager
                     IWebElement element = wait.Until(ExpectedConditions.ElementIsVisible(by));
 
                     //highlight element
-                    //try
-                    //{
-                    //    var Js = (IJavaScriptExecutor)driver;
-                    //    Js.ExecuteScript(@"$(arguments[0]).css({ ""border-width"" : ""4px"", ""border-style"" : ""solid"", ""border-color"" : ""red"" });", found);
-                    //    easteregg(Js);
-                    //}
-                    //catch (Exception hi) { Console.WriteLine(hi); }
+                    try
+                    {
+                        var Js = (IJavaScriptExecutor)driver;
+                        Js.ExecuteScript(@"$(arguments[0]).css({ ""border-width"" : ""4px"", ""border-style"" : ""solid"", ""border-color"" : ""red"" });", found);
+                        easteregg(Js);
+                    }
+                    catch (Exception hi) { Console.WriteLine(hi); }
 
                     if (elementdictionary.FindException)
                     {

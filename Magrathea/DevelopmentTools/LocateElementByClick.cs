@@ -88,38 +88,38 @@ namespace Magrathea.DevelopmentTools
             toReturn = GetElementFromPointRaw(X, Y);
 
 
-            if (toReturn != null)
-            {
-                String id = toReturn.GetAttribute("id");
-                String name = toReturn.GetAttribute("name");
-                String type = toReturn.GetAttribute("type");
+            //if (toReturn != null)
+            //{
+            //    String id = toReturn.GetAttribute("id");
+            //    String name = toReturn.GetAttribute("name");
+            //    String type = toReturn.GetAttribute("type");
 
-                if ((id == null || id == "") && name == null && type == null)
-                {
-                    //element is probably nested, find its parent by going up a level
-                    Boolean gotDetails = false;
-                    while (!gotDetails)
-                    {
-                        String xPath = GenerateXPATH(toReturn, "");
-                        //go back 1 level of xpath
-                        var split = xPath.Split('/');
-                        String newPath = "";
-                        for (int i = 0; i < split.Count() - 1; i++)
-                        {
-                            newPath += split[i] + "/";
-                        }
-                        newPath = newPath.Remove(newPath.Length - 1);//gets rid of last /
-                        toReturn = FindByxPath(newPath);
+            //    if ((id == null || id == "") && name == null && type == null)
+            //    {
+            //        //element is probably nested, find its parent by going up a level
+            //        Boolean gotDetails = false;
+            //        while (!gotDetails)
+            //        {
+            //            String xPath = GenerateXPATH(toReturn, "");
+            //            //go back 1 level of xpath
+            //            var split = xPath.Split('/');
+            //            String newPath = "";
+            //            for (int i = 0; i < split.Count() - 1; i++)
+            //            {
+            //                newPath += split[i] + "/";
+            //            }
+            //            newPath = newPath.Remove(newPath.Length - 1);//gets rid of last /
+            //            toReturn = FindByxPath(newPath);
 
-                        id = toReturn.GetAttribute("id");
-                        name = toReturn.GetAttribute("name");
-                        if (id != null || name != null)
-                        {
-                            gotDetails = true;
-                        }
-                    }
-                }
-            }
+            //            id = toReturn.GetAttribute("id");
+            //            name = toReturn.GetAttribute("name");
+            //            if (id != null || name != null)
+            //            {
+            //                gotDetails = true;
+            //            }
+            //        }
+            //    }
+            //}
             return toReturn;
         }
 

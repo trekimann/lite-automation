@@ -56,9 +56,33 @@ namespace SelfHostApi
         static void Main(string[] args)
         {
             // FindOpenPort();
+            bool startServer = false;
             Console.WriteLine("Enter Port Number. Defaults to 26000. Put ? to find an open port");
             string portNumber = Console.ReadLine();
-            bool startServer = false;
+            if(portNumber != "")
+            {
+                int portNum = -1;
+                while (portNum == -1 && portNumber != "")
+                {
+                    try
+                    {
+                        portNum = Int32.Parse(portNumber);
+                        if(portNum<0 || portNum>65535)
+                        {
+                            Console.WriteLine("Ports should be between 1 and 65535. Please try again");
+                            portNum = -1;
+                            portNumber = Console.ReadLine();                            
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("input not recognised. Please try again");
+                        portNumber = Console.ReadLine();
+                    }
+
+                }
+                startServer = true;
+            }
             if (portNumber == "")
             {
                 portNumber = "26000";

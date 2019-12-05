@@ -391,7 +391,7 @@ namespace TestExecution
             String xPath = ElementxPathTxtBox.Text.Trim();
             String junk = "------*****------";
 
-            if ((Id == "") && (name == ""))
+            if ((Id == "") && (name == "") && (xPath== ""))
             {
                 ErrorLabel.Text = "No values to save";
                 return;
